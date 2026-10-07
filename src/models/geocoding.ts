@@ -3,6 +3,7 @@ export interface ILocationDetails {
   name: string;
   latitude: number;
   longitude: number;
+  country?: string;
 }
 
 export interface IGeocodingAPIResult {
