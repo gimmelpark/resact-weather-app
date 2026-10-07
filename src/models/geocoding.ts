@@ -5,6 +5,6 @@ export interface ILocationDetails {
   longitude: number;
 }
 
-interface IGeocodingAPIResult {
-  results: ILocationDetails[];
+export interface IGeocodingAPIResult {
+  results?: ILocationDetails[];
 }
