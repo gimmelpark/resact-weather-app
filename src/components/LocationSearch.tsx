@@ -10,9 +10,14 @@ import { Locate, X } from 'lucide-react';
 interface IProps {
   searchString: string;
   onSearchStringChange: (value: string) => void;
+  onGetGeolocationClick: () => void;
 }
 
-function LocationSearch({ searchString, onSearchStringChange }: IProps) {
+function LocationSearch({
+  searchString,
+  onSearchStringChange,
+  onGetGeolocationClick,
+}: IProps) {
   return (
     <div>
       <Field orientation="horizontal">
@@ -38,7 +43,11 @@ function LocationSearch({ searchString, onSearchStringChange }: IProps) {
             </InputGroupButton>
           ) : null}
         </InputGroup>
-        <Button className="cursor-pointer rounded">
+
+        <Button
+          className="cursor-pointer rounded"
+          onClick={onGetGeolocationClick}
+        >
           <Locate />
         </Button>
       </Field>

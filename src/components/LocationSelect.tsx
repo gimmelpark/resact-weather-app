@@ -2,26 +2,25 @@ import type { ILocationDetails } from '@/models/geocoding';
 
 interface IProps {
   locations?: ILocationDetails[];
-  selectedLocationId?: number;
   onLocationSelect: (id: number) => void;
 }
 
-function LocationSelect({
-  locations,
-  selectedLocationId,
-  onLocationSelect,
-}: IProps) {
-  if (!locations) return null;
+function LocationSelect({ locations, onLocationSelect }: IProps) {
+  const getRoundNumber = (num: number, digits = 4): number => {
+    return Math.round(num * 10 ** digits) / 10 ** digits;
+  };
 
   const getLocationCoordinatesString = (location: ILocationDetails): string => {
-    const round = (num: number) => Math.round(num * 10000) / 10000;
-
-    return `${round(location.latitude)}, ${round(location.longitude)}`;
+    return `${getRoundNumber(location.latitude)}, ${getRoundNumber(location.longitude)}`;
   };
+
+  if (!locations) return null;
+
+  const reversedLocations = [...locations].reverse();
 
   return (
     <div className="border mb-3 rounded">
-      {locations.map((location) => (
+      {reversedLocations.map((location) => (
         <div
           key={location.id}
           className="flex justify-between items-center py-1 px-3 cursor-pointer hover:bg-gray-100"

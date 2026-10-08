@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import LocationSearch from './LocationSearch';
 import LocationSelect from './LocationSelect';
+import Weather from './Weather';
 
 function WeatherApp() {
   const [locationString, setLocationString] = useState<string>('');
@@ -18,6 +19,10 @@ function WeatherApp() {
   function searchStringChangeHandle(value: string) {
     setLocationString(value);
     setHideLocationSelect(false);
+  }
+
+  function getGeolocationClickHandle() {
+    console.log(123);
   }
 
   function locationSelectHandle(locationId: number) {
@@ -42,11 +47,12 @@ function WeatherApp() {
 
   return (
     <div className="flex justify-center h-dvh">
-      <div className="w-md">
+      <div className="w-md mx-3">
         <div className="h-65 flex flex-col-reverse">
           <LocationSearch
             searchString={locationString}
             onSearchStringChange={searchStringChangeHandle}
+            onGetGeolocationClick={getGeolocationClickHandle}
           />
 
           {showLoactionsSelect ? (
@@ -57,7 +63,11 @@ function WeatherApp() {
           ) : null}
         </div>
 
-        <div className="mt-3">{selectedLocation?.name}</div>
+        {selectedLocation ? (
+          <div className="mt-3">
+            <Weather location={selectedLocation} />
+          </div>
+        ) : null}
       </div>
     </div>
   );
