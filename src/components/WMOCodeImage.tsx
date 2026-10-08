@@ -3,7 +3,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import wmo_weather_codes from '@/data/wmo_weather_codes.json';
+import {
+  getWMODescriptionByCode,
+  getWMOImageUrlByCode,
+} from '@/helpers/wmo_description';
 import { BadgeQuestionMark } from 'lucide-react';
 
 interface IProps {
@@ -12,27 +15,10 @@ interface IProps {
   size?: number;
 }
 
-interface ICodeDescription {
-  day: {
-    description: string;
-    image: string;
-  };
-  night: {
-    description: string;
-    image: string;
-  };
-}
-
-const codeDescriptions: Record<string, ICodeDescription | undefined> =
-  wmo_weather_codes;
-
-function WMOCodeImage({ code, isDay, size = 20 }: IProps) {
-  const dayNightKey = isDay ? 'day' : 'night';
-
+function WMOCodeImage({ code, isDay, size = 36 }: IProps) {
   const description =
-    codeDescriptions[code]?.[dayNightKey]?.description ??
-    'Unknown weather code';
-  const imgUrl = codeDescriptions[code]?.[dayNightKey]?.image;
+    getWMODescriptionByCode(code, isDay) ?? 'Unknown weather code';
+  const imgUrl = getWMOImageUrlByCode(code, isDay);
 
   const imgStyles = {
     height: `${size}px`,

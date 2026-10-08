@@ -18,14 +18,14 @@ export interface ICurrentWeather {
   weather_code: number;
 }
 
-interface IDailyWeatherUnits {
+export interface IDailyWeatherUnits {
   temperature_2m_max: string;
   temperature_2m_min: string;
 }
 
 interface IDailyWeather {
   time: string[];
-  weather_code: string[];
+  weather_code: number[];
   temperature_2m_max: number[];
   temperature_2m_min: number[];
 }

@@ -18,12 +18,12 @@ function WeatherCurrent({ weather, weatherUnits }: IProps) {
           />
           <div>
             <div className="text-2xl font-bold text-gray-600">
-              {weather.temperature_2m}
+              {Math.round(weather.temperature_2m)}
               {weatherUnits.temperature_2m}
             </div>
 
             <div className="text-gray-500">
-              Feels like {weather.apparent_temperature}
+              Feels like {Math.round(weather.apparent_temperature)}
               {weatherUnits.apparent_temperature}
             </div>
           </div>
