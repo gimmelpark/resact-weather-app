@@ -8,14 +8,19 @@ import WeatherCurrent from './WeatherCurrent';
 import WeatherDay from './WeatherDay';
 
 interface IProps {
-  location: ILocationDetails;
+  location: ILocationDetails | null;
+  locationCoords: { lat: number; lon: number };
 }
 
-function Weather({ location }: IProps) {
+function Weather({ location, locationCoords }: IProps) {
   const { data } = useQuery({
-    queryKey: ['forecast', location.latitude, location.longitude],
+    queryKey: ['forecast', locationCoords.lat, locationCoords.lon],
     queryFn: getWeatherForecast,
   });
+
+  const titleString = location
+    ? `${location.name}${location.country ? ', ' + location.country : ''}`
+    : `${locationCoords.lat}, ${locationCoords.lon}`;
 
   const weekWeatherData =
     data?.daily.time.map((date, i) => {
@@ -34,10 +39,7 @@ function Weather({ location }: IProps) {
   return (
     <div className="border rounded px-3 py-1 mb-6">
       <div className="flex justify-between items-center">
-        <div>
-          Weather in {location.name}
-          {location.country ? `, ${location.country}` : null}
-        </div>
+        <div>{titleString}</div>
 
         {data ? (
           <div className="text-gray-500">{currentWeatherDescription}</div>

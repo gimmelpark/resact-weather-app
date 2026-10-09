@@ -2,10 +2,15 @@ import type { ILocationDetails } from '@/models/geocoding';
 
 interface IProps {
   locations?: ILocationDetails[];
-  onLocationSelect: (id: number) => void;
+  isPendingUserPos: boolean;
+  onLocationSelect: (id: number | string) => void;
 }
 
-function LocationSelect({ locations, onLocationSelect }: IProps) {
+function LocationSelect({
+  locations,
+  isPendingUserPos,
+  onLocationSelect,
+}: IProps) {
   const getRoundNumber = (num: number, digits = 4): number => {
     return Math.round(num * 10 ** digits) / 10 ** digits;
   };
@@ -23,8 +28,10 @@ function LocationSelect({ locations, onLocationSelect }: IProps) {
       {reversedLocations.map((location) => (
         <div
           key={location.id}
-          className="flex justify-between items-center py-1 px-3 cursor-pointer hover:bg-gray-100"
-          onClick={() => onLocationSelect(location.id)}
+          className={`flex justify-between items-center py-1 px-3  ${isPendingUserPos ? '' : 'cursor-pointer hover:bg-cyan-100'}`}
+          onClick={() =>
+            isPendingUserPos ? null : onLocationSelect(location.id)
+          }
         >
           <div>
             {location.name}{' '}

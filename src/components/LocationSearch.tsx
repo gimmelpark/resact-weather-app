@@ -5,16 +5,19 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from '@/components/ui/input-group';
+import { Spinner } from '@/components/ui/spinner';
 import { Locate, X } from 'lucide-react';
 
 interface IProps {
   searchString: string;
+  isPendingUserPos: boolean;
   onSearchStringChange: (value: string) => void;
   onGetGeolocationClick: () => void;
 }
 
 function LocationSearch({
   searchString,
+  isPendingUserPos,
   onSearchStringChange,
   onGetGeolocationClick,
 }: IProps) {
@@ -23,6 +26,7 @@ function LocationSearch({
       <Field orientation="horizontal">
         <InputGroup className="rounded">
           <InputGroupInput
+            disabled={isPendingUserPos}
             type="text"
             placeholder="Enter location name"
             value={searchString}
@@ -46,9 +50,10 @@ function LocationSearch({
 
         <Button
           className="cursor-pointer rounded"
+          disabled={isPendingUserPos}
           onClick={onGetGeolocationClick}
         >
-          <Locate />
+          {isPendingUserPos ? <Spinner /> : <Locate />}
         </Button>
       </Field>
     </div>

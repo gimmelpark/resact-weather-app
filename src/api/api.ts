@@ -1,12 +1,16 @@
 import type { IForecastApiResult } from '@/models/forecast';
-import type { IGeocodingAPIResult } from '@/models/geocoding';
+import type {
+  IGeocodingAPIResult,
+  IReverseGeocodingAPIResult,
+} from '@/models/geocoding';
 import type { QueryFunctionContext } from '@tanstack/react-query';
 
 function getUrl(
   baseUrl: string,
-  params?: Record<string, string | number>,
+  params?: Record<string, string | number | undefined>,
 ): string {
   let paramsString = Object.entries(params ?? {})
+    .filter(([, value]) => !!value)
     .map(([key, value]) => `${key}=${value}`)
     .join('&');
 
@@ -17,7 +21,7 @@ function getUrl(
 
 async function httpGet<ReturnType>(
   url: string,
-  params?: Record<string, string | number>,
+  params?: Record<string, string | number | undefined>,
 ): Promise<ReturnType | undefined> {
   try {
     const response = await fetch(getUrl(url, params));
@@ -59,4 +63,22 @@ export function getWeatherForecast({
   };
 
   return httpGet<IForecastApiResult>(url, params);
+}
+
+export function getLocationNameByCoordinates({
+  queryKey,
+}: QueryFunctionContext<
+  ['reverseGeocoding', latitude?: number, longitude?: number]
+>) {
+  const [, latitude, longitude] = queryKey;
+
+  const url = 'https://api-bdc.net/data/reverse-geocode';
+  const params = {
+    latitude,
+    longitude,
+    localityLanguage: 'en',
+    key: import.meta.env.VITE_BIGDATACLOUD_API_KEY,
+  };
+
+  return httpGet<IReverseGeocodingAPIResult>(url, params);
 }

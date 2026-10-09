@@ -1,5 +1,5 @@
 export interface ILocationDetails {
-  id: number;
+  id: number | string;
   name: string;
   latitude: number;
   longitude: number;
@@ -8,4 +8,10 @@ export interface ILocationDetails {
 
 export interface IGeocodingAPIResult {
   results?: ILocationDetails[];
+}
+
+export interface IReverseGeocodingAPIResult {
+  city?: string;
+  locality?: string;
+  countryName?: string;
 }
