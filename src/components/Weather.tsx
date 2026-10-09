@@ -16,6 +16,7 @@ function Weather({ location, locationCoords }: IProps) {
   const { data } = useQuery({
     queryKey: ['forecast', locationCoords.lat, locationCoords.lon],
     queryFn: getWeatherForecast,
+    refetchInterval: 120 * 1000,
   });
 
   const titleString = location
