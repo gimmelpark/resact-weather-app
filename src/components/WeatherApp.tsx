@@ -23,17 +23,31 @@ function WeatherApp() {
     setLocationString,
     searchStringChangeHandle,
     locationSelectHandle,
-  } = useLocationSearch(setLocationCoords, setSelectedLocation);
+  } = useLocationSearch((location: ILocationDetails) => {
+    setLocationCoords({
+      lat: location.latitude,
+      lon: location.longitude,
+    });
+    setSelectedLocation(location);
+  });
 
   const { isPendingUserPos, getCurrentGeolocationHandle } =
     useCurrentGeolocation(
       locationCoords,
-      setLocationCoords,
-      setSelectedLocation,
-      setLocationString,
+      (latitude: number, longitude: number) => {
+        setLocationCoords({
+          lat: latitude,
+          lon: longitude,
+        });
+
+        setSelectedLocation(null);
+        setLocationString('');
+      },
     );
 
-  useReverseGeocoding(locationCoords, setSelectedLocation);
+  const { userLocation } = useReverseGeocoding(locationCoords);
+
+  const shownLocation = selectedLocation ?? userLocation;
 
   return (
     <div className="flex justify-center h-dvh">
@@ -57,10 +71,7 @@ function WeatherApp() {
 
         {locationCoords ? (
           <div className="mt-3">
-            <Weather
-              location={selectedLocation}
-              locationCoords={locationCoords}
-            />
+            <Weather location={shownLocation} locationCoords={locationCoords} />
           </div>
         ) : null}
       </div>

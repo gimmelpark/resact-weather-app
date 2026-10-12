@@ -1,19 +1,9 @@
 import { getLocationNameByCoordinates } from '@/api/api';
-import type {
-  ILocationDetails,
-  IReverseGeocodingAPIResult,
-} from '@/models/geocoding';
+import type { ILocationDetails } from '@/models/geocoding';
 import { useQuery } from '@tanstack/react-query';
-import {
-  useEffect,
-  useEffectEvent,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
 
 export function useReverseGeocoding(
   coords: { lat: number; lon: number } | null,
-  setLocation: Dispatch<SetStateAction<ILocationDetails | null>>,
 ) {
   const { data } = useQuery({
     queryKey: ['reverseGeocoding', coords?.lat, coords?.lon],
@@ -21,23 +11,16 @@ export function useReverseGeocoding(
     enabled: !!coords,
   });
 
-  const onDataLoaded = useEffectEvent(
-    (data: IReverseGeocodingAPIResult | undefined) => {
-      if (data && coords) {
-        const location: ILocationDetails = {
+  const userLocation: ILocationDetails | null =
+    data && coords
+      ? {
           id: `${coords.lat},${coords.lon}`,
           name: data.city ?? data.locality ?? 'Unknown location',
           country: data.countryName,
           latitude: coords.lat,
           longitude: coords.lon,
-        };
+        }
+      : null;
 
-        setLocation(location);
-      }
-    },
-  );
-
-  useEffect(() => {
-    onDataLoaded(data);
-  }, [data]);
+  return { userLocation };
 }

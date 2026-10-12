@@ -1,12 +1,11 @@
 import { getLoacationByName } from '@/api/api';
 import type { ILocationDetails } from '@/models/geocoding';
 import { useQuery } from '@tanstack/react-query';
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { useState } from 'react';
 import { useDebouncedValue } from './useDebouncedValue';
 
 export function useLocationSearch(
-  setCoords: Dispatch<SetStateAction<{ lat: number; lon: number } | null>>,
-  setLocation: Dispatch<SetStateAction<ILocationDetails | null>>,
+  onSelect: (location: ILocationDetails) => void,
 ) {
   const [locationString, setLocationString] = useState<string>('');
   const debouncedLocationString = useDebouncedValue<string>(locationString);
@@ -19,17 +18,12 @@ export function useLocationSearch(
 
   function locationSelectHandle(locationId: number | string) {
     const location = data?.results?.find(({ id }) => id === locationId) ?? null;
-    setLocation(location);
+    if (!location) return;
 
     setHideLocationSelect(true);
+    setLocationString(location.name);
 
-    if (location) {
-      setCoords({
-        lat: location.latitude,
-        lon: location.longitude,
-      });
-      setLocationString(location.name);
-    }
+    onSelect(location);
   }
 
   const { data } = useQuery({

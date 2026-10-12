@@ -1,12 +1,9 @@
 import { getCurrentGeolocation } from '@/helpers/get_geolocation';
-import type { ILocationDetails } from '@/models/geocoding';
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { useState } from 'react';
 
 export function useCurrentGeolocation(
   coords: { lat: number; lon: number } | null,
-  setCoords: Dispatch<SetStateAction<{ lat: number; lon: number } | null>>,
-  setLocation: Dispatch<SetStateAction<ILocationDetails | null>>,
-  setLocationString: Dispatch<SetStateAction<string>>,
+  onLocate: (latitude: number, longitude: number) => void,
 ) {
   const [isPendingUserPos, setIsPendingUserPos] = useState(false);
 
@@ -20,13 +17,7 @@ export function useCurrentGeolocation(
       const newLon = Math.round(pos.coords.longitude * 1000) / 1000;
 
       if (coords?.lat !== newLat || coords?.lon !== newLon) {
-        setCoords({
-          lat: newLat,
-          lon: newLon,
-        });
-
-        setLocation(null);
-        setLocationString('');
+        onLocate(newLat, newLon);
       }
     }
 
