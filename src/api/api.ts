@@ -1,18 +1,20 @@
 import type { IForecastApiResult } from '@/models/forecast';
 import type {
+  ICoordinates,
   IGeocodingAPIResult,
   IReverseGeocodingAPIResult,
 } from '@/models/geocoding';
-import type { QueryFunctionContext } from '@tanstack/react-query';
+import { queryOptions, type QueryFunctionContext } from '@tanstack/react-query';
 
 function getUrl(
   baseUrl: string,
   params?: Record<string, string | number | undefined>,
 ): string {
-  let paramsString = Object.entries(params ?? {})
-    .filter(([, value]) => !!value)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&');
+  let paramsString = new URLSearchParams(
+    Object.entries(params ?? {})
+      .filter(([, value]) => value !== undefined)
+      .map(([key, value]) => [key, `${value}`]),
+  ).toString();
 
   if (paramsString.length) paramsString = '?' + paramsString;
 
@@ -22,23 +24,17 @@ function getUrl(
 async function httpGet<ReturnType>(
   url: string,
   params?: Record<string, string | number | undefined>,
-): Promise<ReturnType | undefined> {
-  try {
-    const response = await fetch(getUrl(url, params));
+): Promise<ReturnType> {
+  const response = await fetch(getUrl(url, params));
 
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    return result;
-  } catch (error) {
-    console.error(error);
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`);
   }
+
+  return response.json();
 }
 
-export function getLocationByName({
+function getLocationByName({
   queryKey,
 }: QueryFunctionContext<['geocoding', name: string]>) {
   const [, name] = queryKey;
@@ -48,7 +44,15 @@ export function getLocationByName({
   return httpGet<IGeocodingAPIResult>(url, { name, count: 5 });
 }
 
-export function getWeatherForecast({
+export function geocodingOptions(name: string) {
+  return queryOptions({
+    queryKey: ['geocoding', name],
+    queryFn: getLocationByName,
+    enabled: name.length > 2,
+  });
+}
+
+function getWeatherForecast({
   queryKey,
 }: QueryFunctionContext<['forecast', latitude: number, longitude: number]>) {
   const [, latitude, longitude] = queryKey;
@@ -65,7 +69,14 @@ export function getWeatherForecast({
   return httpGet<IForecastApiResult>(url, params);
 }
 
-export function getLocationNameByCoordinates({
+export function forecastOptions(latitude: number, longitude: number) {
+  return queryOptions({
+    queryKey: ['forecast', latitude, longitude],
+    queryFn: getWeatherForecast,
+  });
+}
+
+function getLocationNameByCoordinates({
   queryKey,
 }: QueryFunctionContext<
   ['reverseGeocoding', latitude?: number, longitude?: number]
@@ -81,4 +92,12 @@ export function getLocationNameByCoordinates({
   };
 
   return httpGet<IReverseGeocodingAPIResult>(url, params);
+}
+
+export function reverseGeocodingOptions(coords: ICoordinates | null) {
+  return queryOptions({
+    queryKey: ['reverseGeocoding', coords?.latitude, coords?.longitude],
+    queryFn: getLocationNameByCoordinates,
+    enabled: !!coords,
+  });
 }

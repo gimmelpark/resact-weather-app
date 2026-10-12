@@ -1,9 +1,9 @@
-import { getWeatherForecast } from '@/api/api';
+import { forecastOptions } from '@/api/api';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
 import { getWMODescriptionByCode } from '@/helpers/wmoDescription';
-import type { ILocationDetails } from '@/models/geocoding';
+import type { ICoordinates, ILocationDetails } from '@/models/geocoding';
 import { useQuery } from '@tanstack/react-query';
 import { RotateCcw } from 'lucide-react';
 import WeatherCurrent from './WeatherCurrent';
@@ -11,19 +11,18 @@ import WeatherDay from './WeatherDay';
 
 interface IProps {
   location: ILocationDetails | null;
-  locationCoords: { lat: number; lon: number };
+  locationCoords: ICoordinates;
 }
 
 function Weather({ location, locationCoords }: IProps) {
   const { data, isPending, refetch } = useQuery({
-    queryKey: ['forecast', locationCoords.lat, locationCoords.lon],
-    queryFn: getWeatherForecast,
-    refetchInterval: 120 * 1000,
+    ...forecastOptions(locationCoords.latitude, locationCoords.longitude),
+    refetchInterval: 10 * 60 * 1000,
   });
 
   const titleString = location
     ? `${location.name}${location.country ? ', ' + location.country : ''}`
-    : `${locationCoords.lat}, ${locationCoords.lon}`;
+    : `${locationCoords.latitude}, ${locationCoords.longitude}`;
 
   const weekWeatherData =
     data?.daily.time.map((date, i) => {
@@ -54,6 +53,8 @@ function Weather({ location, locationCoords }: IProps) {
     <Button
       variant="ghost"
       size="icon-xs"
+      aria-label="Refetch"
+      title="Refetch"
       className="cursor-pointer"
       onClick={() => refetch()}
     >

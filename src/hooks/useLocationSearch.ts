@@ -1,4 +1,4 @@
-import { getLocationByName } from '@/api/api';
+import { geocodingOptions } from '@/api/api';
 import type { ILocationDetails } from '@/models/geocoding';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -26,11 +26,7 @@ export function useLocationSearch(
     onSelect(location);
   }
 
-  const { data } = useQuery({
-    queryKey: ['geocoding', debouncedLocationString],
-    queryFn: getLocationByName,
-    enabled: debouncedLocationString.length > 2,
-  });
+  const { data } = useQuery(geocodingOptions(debouncedLocationString));
 
   const locations = data?.results;
   const showLocationsSelect = data?.results && !hideLocationsSelect;

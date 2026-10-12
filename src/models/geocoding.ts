@@ -15,3 +15,8 @@ export interface IReverseGeocodingAPIResult {
   locality?: string;
   countryName?: string;
 }
+
+export interface ICoordinates {
+  latitude: number;
+  longitude: number;
+}

@@ -10,10 +10,13 @@ interface IProps {
 }
 
 function WeatherDay({ date, weatherCode, tempMin, tempMax, units }: IProps) {
+  // date-only strings ('YYYY-MM-DD') are parsed as UTC midnight,
+  // so format in UTC too, otherwise negative UTC offsets show the previous day
   const dateString = new Date(date).toLocaleDateString('en-US', {
     weekday: 'short',
     month: 'short',
     day: '2-digit',
+    timeZone: 'UTC',
   });
 
   return (

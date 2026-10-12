@@ -51,6 +51,8 @@ function LocationSearch({
         <Button
           className="cursor-pointer rounded"
           disabled={isPendingUserPos}
+          aria-label="Get current position"
+          title="Get current position"
           onClick={onGetGeolocationClick}
         >
           {isPendingUserPos ? <Spinner /> : <Locate />}

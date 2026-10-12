@@ -1,7 +1,7 @@
 import { useCurrentGeolocation } from '@/hooks/useCurrentGeolocation';
 import { useLocationSearch } from '@/hooks/useLocationSearch';
 import { useReverseGeocoding } from '@/hooks/useReverseGeocoding';
-import type { ILocationDetails } from '@/models/geocoding';
+import type { ICoordinates, ILocationDetails } from '@/models/geocoding';
 import { useState } from 'react';
 import LocationSearch from './LocationSearch';
 import LocationSelect from './LocationSelect';
@@ -11,10 +11,9 @@ function WeatherApp() {
   const [selectedLocation, setSelectedLocation] =
     useState<null | ILocationDetails>(null);
 
-  const [locationCoords, setLocationCoords] = useState<null | {
-    lat: number;
-    lon: number;
-  }>(null);
+  const [locationCoords, setLocationCoords] = useState<null | ICoordinates>(
+    null,
+  );
 
   const {
     locationString,
@@ -23,10 +22,10 @@ function WeatherApp() {
     setLocationString,
     handleSearchStringChange,
     handleLocationSelect,
-  } =useLocationSearch((location: ILocationDetails) => {
+  } = useLocationSearch((location: ILocationDetails) => {
     setLocationCoords({
-      lat: location.latitude,
-      lon: location.longitude,
+      latitude: location.latitude,
+      longitude: location.longitude,
     });
     setSelectedLocation(location);
   });
@@ -36,8 +35,8 @@ function WeatherApp() {
       locationCoords,
       (latitude: number, longitude: number) => {
         setLocationCoords({
-          lat: latitude,
-          lon: longitude,
+          latitude,
+          longitude,
         });
 
         setSelectedLocation(null);
