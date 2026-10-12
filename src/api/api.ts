@@ -6,6 +6,8 @@ import type {
 } from '@/models/geocoding';
 import { queryOptions, type QueryFunctionContext } from '@tanstack/react-query';
 
+// helpers
+
 function getUrl(
   baseUrl: string,
   params?: Record<string, string | number | undefined>,
@@ -34,6 +36,8 @@ async function httpGet<ReturnType>(
   return response.json();
 }
 
+// api methods
+
 function getLocationByName({
   queryKey,
 }: QueryFunctionContext<['geocoding', name: string]>) {
@@ -42,14 +46,6 @@ function getLocationByName({
   const url = 'https://geocoding-api.open-meteo.com/v1/search';
 
   return httpGet<IGeocodingAPIResult>(url, { name, count: 5 });
-}
-
-export function geocodingOptions(name: string) {
-  return queryOptions({
-    queryKey: ['geocoding', name],
-    queryFn: getLocationByName,
-    enabled: name.length > 2,
-  });
 }
 
 function getWeatherForecast({
@@ -69,13 +65,6 @@ function getWeatherForecast({
   return httpGet<IForecastApiResult>(url, params);
 }
 
-export function forecastOptions(latitude: number, longitude: number) {
-  return queryOptions({
-    queryKey: ['forecast', latitude, longitude],
-    queryFn: getWeatherForecast,
-  });
-}
-
 function getLocationNameByCoordinates({
   queryKey,
 }: QueryFunctionContext<
@@ -92,6 +81,23 @@ function getLocationNameByCoordinates({
   };
 
   return httpGet<IReverseGeocodingAPIResult>(url, params);
+}
+
+// queryOptions
+
+export function geocodingOptions(name: string) {
+  return queryOptions({
+    queryKey: ['geocoding', name],
+    queryFn: getLocationByName,
+    enabled: name.length > 2,
+  });
+}
+
+export function forecastOptions(latitude: number, longitude: number) {
+  return queryOptions({
+    queryKey: ['forecast', latitude, longitude],
+    queryFn: getWeatherForecast,
+  });
 }
 
 export function reverseGeocodingOptions(coords: ICoordinates | null) {

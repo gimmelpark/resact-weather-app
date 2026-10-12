@@ -36,9 +36,7 @@ function LocationSelect({
           <div>
             {location.name}
             {location.country ? (
-              <>
-                <span className="text-gray-400 ml-2">({location.country})</span>
-              </>
+              <span className="text-gray-400 ml-2">({location.country})</span>
             ) : null}
           </div>
 

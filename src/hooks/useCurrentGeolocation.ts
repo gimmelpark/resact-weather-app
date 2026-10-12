@@ -17,9 +17,7 @@ export function useCurrentGeolocation(
       const newLat = Math.round(pos.coords.latitude * 1000) / 1000;
       const newLon = Math.round(pos.coords.longitude * 1000) / 1000;
 
-      if (coords?.latitude !== newLat || coords?.longitude !== newLon) {
-        onLocate(newLat, newLon);
-      }
+      onLocate(newLat, newLon);
     }
 
     setIsPendingUserPos(false);

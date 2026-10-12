@@ -11,6 +11,8 @@ export function useLocationSearch(
   const debouncedLocationString = useDebouncedValue<string>(locationString);
   const [hideLocationsSelect, setHideLocationsSelect] = useState(false);
 
+  const { data } = useQuery(geocodingOptions(debouncedLocationString));
+
   function handleSearchStringChange(value: string) {
     setLocationString(value);
     setHideLocationsSelect(false);
@@ -26,16 +28,18 @@ export function useLocationSearch(
     onSelect(location);
   }
 
-  const { data } = useQuery(geocodingOptions(debouncedLocationString));
-
   const locations = data?.results;
   const showLocationsSelect = data?.results && !hideLocationsSelect;
+
+  function resetLocationString() {
+    setLocationString('');
+  }
 
   return {
     locationString,
     showLocationsSelect,
     locations,
-    setLocationString,
+    resetLocationString,
     handleSearchStringChange,
     handleLocationSelect,
   };

@@ -19,7 +19,7 @@ function WeatherApp() {
     locationString,
     showLocationsSelect,
     locations,
-    setLocationString,
+    resetLocationString,
     handleSearchStringChange,
     handleLocationSelect,
   } = useLocationSearch((location: ILocationDetails) => {
@@ -40,11 +40,13 @@ function WeatherApp() {
         });
 
         setSelectedLocation(null);
-        setLocationString('');
+        resetLocationString();
       },
     );
 
-  const { userLocation } = useReverseGeocoding(locationCoords);
+  const { userLocation } = useReverseGeocoding(
+    selectedLocation ? null : locationCoords,
+  );
 
   const shownLocation = selectedLocation ?? userLocation;
 
