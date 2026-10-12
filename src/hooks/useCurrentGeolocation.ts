@@ -1,4 +1,4 @@
-import { getCurrentGeolocation } from '@/helpers/get_geolocation';
+import { getCurrentGeolocation } from '@/helpers/getGeolocation';
 import { useState } from 'react';
 
 export function useCurrentGeolocation(
@@ -7,7 +7,7 @@ export function useCurrentGeolocation(
 ) {
   const [isPendingUserPos, setIsPendingUserPos] = useState(false);
 
-  async function getCurrentGeolocationHandle() {
+  async function handleGetCurrentGeolocation() {
     setIsPendingUserPos(true);
 
     const pos = await getCurrentGeolocation();
@@ -26,6 +26,6 @@ export function useCurrentGeolocation(
 
   return {
     isPendingUserPos,
-    getCurrentGeolocationHandle,
+    handleGetCurrentGeolocation,
   };
 }

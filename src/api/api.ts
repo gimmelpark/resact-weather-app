@@ -38,7 +38,7 @@ async function httpGet<ReturnType>(
   }
 }
 
-export function getLoacationByName({
+export function getLocationByName({
   queryKey,
 }: QueryFunctionContext<['geocoding', name: string]>) {
   const [, name] = queryKey;

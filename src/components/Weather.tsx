@@ -2,7 +2,7 @@ import { getWeatherForecast } from '@/api/api';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Spinner } from '@/components/ui/spinner';
-import { getWMODescriptionByCode } from '@/helpers/wmo_description';
+import { getWMODescriptionByCode } from '@/helpers/wmoDescription';
 import type { ILocationDetails } from '@/models/geocoding';
 import { useQuery } from '@tanstack/react-query';
 import { RotateCcw } from 'lucide-react';
@@ -41,7 +41,7 @@ function Weather({ location, locationCoords }: IProps) {
 
   const leftTitleContent =
     !data && !isPending ? (
-      <div className="text-red-600">Cannot get forecat</div>
+      <div className="text-red-600">Cannot get forecast</div>
     ) : (
       <div>{titleString}</div>
     );

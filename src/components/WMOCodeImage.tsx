@@ -6,7 +6,7 @@ import {
 import {
   getWMODescriptionByCode,
   getWMOImageUrlByCode,
-} from '@/helpers/wmo_description';
+} from '@/helpers/wmoDescription';
 import { BadgeQuestionMark } from 'lucide-react';
 
 interface IProps {

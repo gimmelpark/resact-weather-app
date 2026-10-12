@@ -18,12 +18,12 @@ function WeatherApp() {
 
   const {
     locationString,
-    showLoactionsSelect,
+    showLocationsSelect,
     locations,
     setLocationString,
-    searchStringChangeHandle,
-    locationSelectHandle,
-  } = useLocationSearch((location: ILocationDetails) => {
+    handleSearchStringChange,
+    handleLocationSelect,
+  } =useLocationSearch((location: ILocationDetails) => {
     setLocationCoords({
       lat: location.latitude,
       lon: location.longitude,
@@ -31,7 +31,7 @@ function WeatherApp() {
     setSelectedLocation(location);
   });
 
-  const { isPendingUserPos, getCurrentGeolocationHandle } =
+  const { isPendingUserPos, handleGetCurrentGeolocation } =
     useCurrentGeolocation(
       locationCoords,
       (latitude: number, longitude: number) => {
@@ -56,15 +56,15 @@ function WeatherApp() {
           <LocationSearch
             searchString={locationString}
             isPendingUserPos={isPendingUserPos}
-            onSearchStringChange={searchStringChangeHandle}
-            onGetGeolocationClick={getCurrentGeolocationHandle}
+            onSearchStringChange={handleSearchStringChange}
+            onGetGeolocationClick={handleGetCurrentGeolocation}
           />
 
-          {showLoactionsSelect ? (
+          {showLocationsSelect ? (
             <LocationSelect
               locations={locations}
               isPendingUserPos={isPendingUserPos}
-              onLocationSelect={locationSelectHandle}
+              onLocationSelect={handleLocationSelect}
             />
           ) : null}
         </div>
